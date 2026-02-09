@@ -15,6 +15,7 @@ export function PostureCard() {
     enable,
     disable,
     reschedule,
+    testNotification,
   } = useNotifications();
 
   const [isEnabling, setIsEnabling] = useState(false);
@@ -152,15 +153,26 @@ export function PostureCard() {
                 </motion.div>
               ))}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={reschedule}
-              className="w-full mt-2"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Sortear novos horários
-            </Button>
+            <div className="flex gap-2 mt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={reschedule}
+                className="flex-1"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Novos horários
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={testNotification}
+                className="flex-1"
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                Testar
+              </Button>
+            </div>
           </motion.div>
         )}
       </Card>
