@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { Bell, BellOff, Clock, RefreshCw, Smartphone } from 'lucide-react';
+import { Bell, BellOff, Clock, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useNotifications } from '@/hooks/useNotifications';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export function PostureCard() {
   const {
@@ -19,28 +19,6 @@ export function PostureCard() {
   } = useNotifications();
 
   const [isEnabling, setIsEnabling] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    const checkInstalled = () => {
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        setIsInstalled(true);
-      }
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    checkInstalled();
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, []);
 
   const handleToggle = async () => {
     if (settings.enabled) {
@@ -49,17 +27,6 @@ export function PostureCard() {
       setIsEnabling(true);
       await enable();
       setIsEnabling(false);
-    }
-  };
-
-  const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setIsInstalled(true);
-      }
-      setDeferredPrompt(null);
     }
   };
 
@@ -74,7 +41,7 @@ export function PostureCard() {
     return (
       <Card className="p-6 text-center">
         <p className="text-muted-foreground">
-          Seu navegador não suporta notificações push.
+          Notificações não suportadas neste dispositivo.
         </p>
       </Card>
     );
@@ -124,7 +91,7 @@ export function PostureCard() {
             animate={{ opacity: 1 }}
             className="p-4 rounded-lg bg-destructive/10 text-destructive text-sm mb-4"
           >
-            Notificações bloqueadas. Habilite nas configurações do navegador.
+            Notificações bloqueadas. Habilite nas configurações do dispositivo.
           </motion.div>
         )}
 
@@ -176,32 +143,6 @@ export function PostureCard() {
           </motion.div>
         )}
       </Card>
-
-      {/* Install Prompt */}
-      {!isInstalled && deferredPrompt && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="p-4 border-primary/30 bg-primary/5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg gradient-primary">
-                <Smartphone className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">Instalar app</p>
-                <p className="text-xs text-muted-foreground">
-                  Acesso rápido na tela inicial
-                </p>
-              </div>
-              <Button size="sm" onClick={handleInstall}>
-                Instalar
-              </Button>
-            </div>
-          </Card>
-        </motion.div>
-      )}
 
       {/* Info Card */}
       <motion.div
