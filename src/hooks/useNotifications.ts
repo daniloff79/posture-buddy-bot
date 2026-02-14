@@ -153,7 +153,7 @@ export function useNotifications() {
           id: index + 1,
           title: 'Lembrete de Postura',
           body: messages[Math.floor(Math.random() * messages.length)],
-          schedule: { at: time },
+          schedule: { at: time, allowWhileIdle: true },
           smallIcon: 'ic_stat_icon',
           largeIcon: 'ic_launcher',
           channelId: 'postura-reminders',
