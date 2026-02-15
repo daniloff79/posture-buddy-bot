@@ -13,8 +13,8 @@ interface Settings {
 
 const defaultSettings: Settings = {
   enabled: false,
-  startHour: 9.5,
-  endHour: 22.5,
+  startHour: 9,
+  endHour: 23,
 };
 
 const messages = [

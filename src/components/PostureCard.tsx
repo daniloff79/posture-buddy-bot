@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import { Bell, BellOff, Clock, RefreshCw } from 'lucide-react';
+import { Bell, BellOff, Clock, RefreshCw, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useState } from 'react';
 
@@ -14,11 +15,13 @@ export function PostureCard() {
     isSupported,
     enable,
     disable,
+    updateSettings,
     reschedule,
     testNotification,
   } = useNotifications();
 
   const [isEnabling, setIsEnabling] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleToggle = async () => {
     if (settings.enabled) {
@@ -35,6 +38,16 @@ export function PostureCard() {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const formatHour = (hour: number) => {
+    const h = Math.floor(hour);
+    const m = Math.round((hour - h) * 60);
+    return `${h}h${m > 0 ? m.toString().padStart(2, '0') : ''}`;
+  };
+
+  const handleTimeChange = (values: number[]) => {
+    updateSettings({ startHour: values[0], endHour: values[1] });
   };
 
   if (!isSupported) {
@@ -144,18 +157,59 @@ export function PostureCard() {
         )}
       </Card>
 
-      {/* Info Card */}
+      {/* Info & Settings Card */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        <Card className="p-4 bg-secondary/50">
-          <p className="text-sm text-muted-foreground text-center">
-            2 lembretes em horários aleatórios entre{' '}
-            <span className="font-semibold text-foreground">9h30</span> e{' '}
-            <span className="font-semibold text-foreground">22h30</span> (horário de Brasília)
-          </p>
+        <Card className="p-4 bg-secondary/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              2 lembretes entre{' '}
+              <span className="font-semibold text-foreground">{formatHour(settings.startHour)}</span> e{' '}
+              <span className="font-semibold text-foreground">{formatHour(settings.endHour)}</span> (Brasília)
+            </p>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setShowSettings(!showSettings)}
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {showSettings && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="space-y-4 pt-2"
+            >
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Início: {formatHour(settings.startHour)}</span>
+                  <span>Fim: {formatHour(settings.endHour)}</span>
+                </div>
+                <Slider
+                  value={[settings.startHour, settings.endHour]}
+                  onValueChange={handleTimeChange}
+                  onValueCommit={() => {
+                    if (settings.enabled) reschedule();
+                  }}
+                  min={0}
+                  max={24}
+                  step={0.5}
+                  minStepsBetweenThumbs={2}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>0h</span>
+                  <span>12h</span>
+                  <span>24h</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </Card>
       </motion.div>
     </motion.div>
