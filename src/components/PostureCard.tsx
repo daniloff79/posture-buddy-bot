@@ -153,8 +153,8 @@ export function PostureCard() {
         <Card className="p-4 bg-secondary/50">
           <p className="text-sm text-muted-foreground text-center">
             2 lembretes em horários aleatórios entre{' '}
-            <span className="font-semibold text-foreground">10h</span> e{' '}
-            <span className="font-semibold text-foreground">22h</span> (horário de Brasília)
+            <span className="font-semibold text-foreground">9h30</span> e{' '}
+            <span className="font-semibold text-foreground">22h30</span> (horário de Brasília)
           </p>
         </Card>
       </motion.div>
