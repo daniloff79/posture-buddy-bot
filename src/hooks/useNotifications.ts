@@ -153,7 +153,7 @@ export function useNotifications() {
           id: index + 1,
           title: 'Lembrete de Postura',
           body: messages[Math.floor(Math.random() * messages.length)],
-          schedule: { at: time, allowWhileIdle: true },
+          schedule: { at: time, allowWhileIdle: true, exact: true },
           smallIcon: 'ic_stat_icon',
           largeIcon: 'ic_launcher',
           channelId: 'postura-reminders',
@@ -216,6 +216,17 @@ export function useNotifications() {
       const result = await LocalNotifications.requestPermissions();
       const granted = result.display === 'granted';
       setPermission(granted ? 'granted' : 'denied');
+
+      // Request exact alarm permission on Android 12+
+      try {
+        const exactStatus = await LocalNotifications.checkExactNotificationSetting();
+        if (exactStatus.exact_alarm !== 'granted') {
+          await LocalNotifications.changeExactNotificationSetting();
+        }
+      } catch (e) {
+        console.log('Exact alarm permission not available:', e);
+      }
+
       return granted;
     }
 
