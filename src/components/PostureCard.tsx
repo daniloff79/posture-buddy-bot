@@ -143,18 +143,19 @@ export function PostureCard() {
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Novos horários
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={testNotification}
-                className="flex-1"
-              >
-                <Bell className="w-4 h-4 mr-2" />
-                Testar
-              </Button>
             </div>
           </motion.div>
         )}
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={testNotification}
+          className="w-full mt-3"
+        >
+          <Bell className="w-4 h-4 mr-2" />
+          Testar notificação
+        </Button>
       </Card>
 
       {/* Info & Settings Card */}
