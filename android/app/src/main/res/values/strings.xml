@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Posture Notificaion</string>
+    <string name="title_activity_main">posture-buddy-bot</string>
+    <string name="package_name">app.lovable.a3ca81e5b32d4e9f90fe83ea2061697e</string>
+    <string name="custom_url_scheme">app.lovable.a3ca81e5b32d4e9f90fe83ea2061697e</string>
+</resources>
