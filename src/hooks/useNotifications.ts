@@ -176,7 +176,18 @@ export function useNotifications() {
     return times;
   }, [settings.startHour, settings.endHour, generateRandomTimes, scheduleNativeNotifications]);
 
-  // Re-schedule when app becomes visible (handles next-day rollover)
+  // Check if current day is a weekday (Mon-Fri) in Brasília timezone
+  const isWeekdayInBrasilia = useCallback(() => {
+    const now = new Date();
+    const brasiliaOffset = -3 * 60;
+    const localOffset = now.getTimezoneOffset();
+    const totalOffset = localOffset + brasiliaOffset;
+    const brasiliaTime = new Date(now.getTime() + totalOffset * 60 * 1000);
+    const day = brasiliaTime.getDay();
+    return day >= 1 && day <= 5;
+  }, []);
+
+  // Re-schedule when app becomes visible (handles next-day rollover, weekdays only)
   useEffect(() => {
     if (!settings.enabled || permission !== 'granted') return;
 
@@ -184,7 +195,7 @@ export function useNotifications() {
       if (document.visibilityState === 'visible') {
         const now = new Date();
         const allPast = scheduledTimes.every(t => t.getTime() < now.getTime() - 60000);
-        if (allPast && scheduledTimes.length > 0) {
+        if (allPast && scheduledTimes.length > 0 && isWeekdayInBrasilia()) {
           generateAndSetTimes();
         }
       }
@@ -195,7 +206,7 @@ export function useNotifications() {
     handleVisibility();
 
     return () => document.removeEventListener('visibilitychange', handleVisibility);
-  }, [settings.enabled, permission, scheduledTimes, generateAndSetTimes]);
+  }, [settings.enabled, permission, scheduledTimes, generateAndSetTimes, isWeekdayInBrasilia]);
 
   // Create notification channel on Android
   useEffect(() => {
