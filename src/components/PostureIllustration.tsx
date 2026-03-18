@@ -6,7 +6,7 @@ export function PostureIllustration() {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6 }}
-      className="relative w-48 h-48 mx-auto mb-8"
+      className="relative w-24 h-24 mx-auto mb-6"
     >
       {/* Background circle */}
       <motion.div
