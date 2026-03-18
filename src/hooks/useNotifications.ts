@@ -128,6 +128,10 @@ export function useNotifications() {
       if (isForTomorrow) {
         notificationTime.setDate(notificationTime.getDate() + 1);
       }
+      // Skip weekends: advance to Monday if falls on Sat/Sun
+      const dayOfWeek = notificationTime.getDay();
+      if (dayOfWeek === 0) notificationTime.setDate(notificationTime.getDate() + 1); // Sun → Mon
+      if (dayOfWeek === 6) notificationTime.setDate(notificationTime.getDate() + 2); // Sat → Mon
 
       notificationTime.setHours(hours, minutes, 0, 0);
       notificationTime.setTime(notificationTime.getTime() - totalOffset * 60 * 1000);
